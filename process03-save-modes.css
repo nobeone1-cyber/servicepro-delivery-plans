@@ -1,0 +1,17 @@
+.repair-decision-footer { gap: 9px; }
+.save-repair-only,
+.close-after-save {
+  min-height: 42px;
+  padding: 10px 18px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 900;
+}
+.save-repair-only { border: 1px solid #717975; background: #59615d; color: #fff; }
+.save-repair-only:hover { background: #4d5551; }
+.close-after-save { border: 1px solid #59615d; background: #444c48; color: #fff; }
+.close-after-save:hover { background: #363d3a; }
+@media (max-width: 650px) {
+  .repair-decision-footer { flex-direction: column; }
+  .save-repair-only, .close-after-save { width: 100%; }
+}

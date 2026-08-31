@@ -1,0 +1,24 @@
+.search-combobox { position: relative; width: 100%; }
+.search-combobox > input {
+  width: 100%; min-height: 44px; padding: 10px 38px 10px 12px;
+  border: 1px solid #ccd5cf; border-radius: 9px; background: #fff;
+  color: var(--ink); font: inherit;
+  background-image: linear-gradient(45deg,transparent 50%,#425148 50%),linear-gradient(135deg,#425148 50%,transparent 50%);
+  background-position: calc(100% - 17px) 19px,calc(100% - 12px) 19px;
+  background-size: 5px 5px,5px 5px; background-repeat: no-repeat;
+}
+.search-combobox > input:focus { border-color: #367b58; outline: 0; box-shadow: 0 0 0 3px #2d85601d; }
+.search-combobox.open > input { border-color: #367b58; border-radius: 9px 9px 0 0; }
+.search-combobox-list {
+  position: absolute; z-index: 80; top: calc(100% - 1px); left: 0; right: 0;
+  display: none; max-height: 230px; overflow-y: auto; padding: 5px;
+  border: 1px solid #367b58; border-radius: 0 0 9px 9px; background: #fff;
+  box-shadow: 0 12px 24px #122d2040;
+}
+.search-combobox.open .search-combobox-list { display: grid; gap: 3px; }
+.search-combobox-list button { width: 100%; padding: 9px 10px; border-radius: 6px; background: #fff; color: var(--ink); text-align: left; font-size: 11px; font-weight: 600; }
+.search-combobox-list button:hover,.search-combobox-list button:focus,.search-combobox-list button[aria-selected=true] { background: #e5f2e9; color: #125c39; outline: 0; }
+.search-combobox-empty { padding: 15px 10px; color: var(--muted); text-align: center; font-size: 10px; }
+.search-combobox-native { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important; }
+.field-invalid .search-combobox > input { border-color: #cf3933 !important; background-color: #fff !important; box-shadow: 0 0 0 3px #cf39331c !important; }
+@media (max-width:600px) { .search-combobox > input { min-height: 46px; } .search-combobox-list { max-height: 190px; } }

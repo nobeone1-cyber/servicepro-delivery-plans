@@ -1,0 +1,29 @@
+.warranty-alert {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  margin: 12px 0 7px; padding: 10px 14px; border: 2px solid; border-radius: 10px;
+}
+.warranty-alert span { font-size: 10px; font-weight: 800; }
+.warranty-alert strong { font-size: 16px; }
+.warranty-alert.in { border-color: #238052; background: #e2f4e9; color: #0e643b; }
+.warranty-alert.out { border-color: #c5483f; background: #ffebe8; color: #a32923; }
+.warranty-alert.unknown { border-color: #c58b25; background: #fff5dc; color: #80590c; }
+.repair-decision { margin: 13px 0; padding: 13px; border: 1px solid #d8dfda; border-radius: 11px; background: #f8faf8; }
+.repair-decision-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.repair-decision-head small, .repair-decision-head b { display: block; }
+.repair-decision-head small { color: var(--muted); font-size: 9px; }
+.repair-decision-head b { margin-top: 2px; font-size: 12px; }
+.repair-decision-head > span { color: var(--green); font-size: 9px; font-weight: 800; }
+.repair-decision-head > span.pending { color: #8b958f; }
+.repair-decision-controls { display: flex; align-items: center; gap: 8px; }
+.repair-decision-controls > input { position: absolute; opacity: 0; pointer-events: none; }
+.repair-decision-controls > label { display: flex; align-items: center; justify-content: center; min-width: 105px; min-height: 40px; padding: 9px 15px; border: 2px solid #cbd2cd; border-radius: 9px; background: #e8ebe9; color: #737c76; font-size: 12px; font-weight: 900; cursor: pointer; }
+.repair-decision-controls > input:checked + .decision-repair { border-color: #14834e; background: #dff5e8; color: #08703d; box-shadow: 0 0 0 3px #16805220; }
+.repair-decision-controls > input:checked + .decision-no-repair { border-color: #c63b34; background: #fee5e3; color: #a5201b; box-shadow: 0 0 0 3px #c63b3420; }
+.save-repair-decision { margin-left: auto; min-height: 40px; padding: 9px 16px; background: #171b19; color: #fff; }
+.save-repair-decision:hover { background: #000; }
+.repair-decision-controls > input:focus-visible + label { outline: 3px solid #2d856044; outline-offset: 2px; }
+@media (max-width: 650px) {
+  .repair-decision-head, .repair-decision-controls { align-items: stretch; flex-direction: column; }
+  .repair-decision-controls > label, .save-repair-decision { width: 100%; }
+  .save-repair-decision { margin-left: 0; }
+}

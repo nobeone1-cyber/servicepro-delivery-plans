@@ -1,0 +1,39 @@
+.root-status {
+  border-width: 2px;
+  border-color: #b9d5c4;
+  background: #f4faf6;
+}
+.inspection-children {
+  position: relative;
+  margin: 2px 0 0 22px;
+  padding-left: 22px;
+  border-left: 3px solid #63a27e;
+}
+.inspection-children[hidden] { display: none !important; }
+.repair-child-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 25px;
+  color: #407258;
+}
+.repair-child-line span {
+  width: 17px;
+  margin-left: -22px;
+  border-top: 3px solid #63a27e;
+}
+.repair-child-line small { font-size: 9px; font-weight: 900; }
+.inspection-children .repair-substatus { margin-top: 5px; background: #fbfdfb; }
+.repair-decision-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid #dfe5e1;
+}
+.repair-decision-footer .save-repair-decision { margin-left: 0; }
+@media (max-width: 650px) {
+  .inspection-children { margin-left: 10px; padding-left: 13px; }
+  .repair-child-line span { width: 9px; margin-left: -13px; }
+  .repair-decision-footer .save-repair-decision { width: 100%; }
+}

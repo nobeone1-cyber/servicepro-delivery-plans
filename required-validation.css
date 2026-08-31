@@ -1,0 +1,32 @@
+.validation-alert {
+  margin: 0 0 14px;
+  padding: 11px 13px;
+  border: 1px solid #d94b44;
+  border-left: 5px solid #bd302a;
+  border-radius: 9px;
+  background: #fff0ef;
+  color: #8f211d;
+}
+.validation-alert b,
+.validation-alert span { display: block; }
+.validation-alert b { font-size: 12px; }
+.validation-alert span { margin-top: 3px; font-size: 10px; line-height: 1.4; }
+.field.field-invalid {
+  padding: 7px;
+  border: 2px solid #cf3933;
+  border-radius: 9px;
+  background: #fff4f3;
+  animation: required-field-pulse .35s ease-out;
+}
+.field.field-invalid > label { color: #a6221d; font-weight: 900; }
+.field.field-invalid input,
+.field.field-invalid select,
+.field.field-invalid textarea {
+  border-color: #cf3933 !important;
+  background-color: #fff !important;
+  box-shadow: 0 0 0 3px #cf39331c;
+}
+.field-error-text { display: block; margin-top: 5px; color: #b12620; font-size: 9px; font-weight: 800; }
+.item-box.field-invalid { border: 2px solid #cf3933; background: #fff5f4; }
+@keyframes required-field-pulse { from { transform: scale(.995); box-shadow: 0 0 0 7px #cf393326; } to { transform: scale(1); box-shadow: none; } }
+@media (prefers-reduced-motion: reduce) { .field.field-invalid { animation: none; } }

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#12372a">
+  <title>ServicePro — ระบบรับส่งของซ่อม</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="process03.css">
+  <link rel="stylesheet" href="process03-status.css">
+  <link rel="stylesheet" href="process03-hierarchy.css">
+  <link rel="stylesheet" href="process03-save-modes.css">
+  <link rel="stylesheet" href="receive-repair-reference.css">
+  <link rel="stylesheet" href="receive-image-layers.css">
+  <link rel="stylesheet" href="process-confirm.css">
+  <link rel="stylesheet" href="required-validation.css">
+  <link rel="stylesheet" href="searchable-select.css">
+  <link rel="stylesheet" href="sidebar-pilot.css">
+</head>
+<body>
+  <div class="pilot">PILOT · ยังไม่มีระบบ Login · ข้อมูลเก็บใน Browser เครื่องนี้</div>
+  <div class="shell">
+    <aside>
+      <div class="brand"><span>SP</span><div><b>ServicePro</b><small>Repair Operations</small></div></div>
+      <nav>
+        <button class="nav active" data-view="dashboard">▦ ภาพรวม</button>
+        <button class="nav" data-view="jobs">⌁ งานทั้งหมด</button>
+        <button class="nav" data-view="create">＋ รับสินค้าใหม่</button>
+        <button class="nav" data-view="masters">♙ ข้อมูลหลัก</button>
+        <button class="nav" data-view="reports">↗ รายงาน</button>
+      </nav>
+      <details class="sidebar-pilot">
+        <summary><span>PILOT</span> เครื่องมือจำลองระบบ</summary>
+        <div class="sidebar-pilot-body">
+          <p>ใช้เฉพาะช่วงทดลองระบบ ไม่เกี่ยวข้องกับเมนูทำงานจริง</p>
+          <button class="sidebar-demo-button" data-demo="1">สร้างข้อมูลจำลอง</button>
+          <button class="sidebar-clear-button" data-clear="1">ล้างข้อมูลทั้งหมด</button>
+        </div>
+      </details>
+      <div class="actor"><label>ผู้ทำรายการ</label><select id="actorSelect"></select><small>ใช้ระบุผู้ทำรายการใน Pilot</small></div>
+    </aside>
+    <main>
+      <header><div class="page-heading"><div class="page-nav"><button class="icon-nav" data-home="1" aria-label="กลับหน้าการ์ดรวมทุก Process" title="กลับหน้าการ์ดรวม"><span aria-hidden="true">⌂</span></button><button class="icon-nav" data-back="1" aria-label="ย้อนกลับหน้าก่อนหน้า" title="ย้อนกลับ"><span aria-hidden="true">←</span></button></div><div><h1 id="pageTitle">ภาพรวมงานซ่อม</h1><p id="pageSub">ติดตามทุกชิ้น ตั้งแต่รับจนส่งคืน</p></div></div><div class="header-actions"><button id="exportBtn" class="ghost">ส่งออกข้อมูล</button><label class="ghost file">นำเข้าข้อมูล<input id="importInput" type="file" accept="application/json"></label><button class="primary" data-go="create">＋ รับสินค้าใหม่</button></div></header>
+      <section id="app"></section>
+    </main>
+  </div>
+  <dialog id="modal"><form method="dialog"><button type="button" class="x" data-modal-dismiss aria-label="ปิดหน้าต่าง">×</button><div id="modalBody"></div></form></dialog>
+  <div id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
