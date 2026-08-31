@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#12372a">
   <title>ServicePro — ระบบรับส่งของซ่อม</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
   <link rel="stylesheet" href="process03.css">
   <link rel="stylesheet" href="process03-status.css">
   <link rel="stylesheet" href="process03-hierarchy.css">
@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="sidebar-pilot.css">
 </head>
 <body>
-  <div class="pilot">PILOT · ยังไม่มีระบบ Login · ข้อมูลเก็บใน Browser เครื่องนี้</div>
+  <div class="pilot">PILOT · ฐานข้อมูลกลางในเครือข่าย · <span id="syncStatus">กำลังเชื่อมต่อ Server…</span></div>
   <div class="shell">
     <aside>
       <div class="brand"><span>SP</span><div><b>ServicePro</b><small>Repair Operations</small></div></div>
@@ -46,6 +46,6 @@
   </div>
   <dialog id="modal"><form method="dialog"><button type="button" class="x" data-modal-dismiss aria-label="ปิดหน้าต่าง">×</button><div id="modalBody"></div></form></dialog>
   <div id="toast"></div>
-  <script src="app.js"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>

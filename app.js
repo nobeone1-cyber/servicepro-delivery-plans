@@ -2,7 +2,25 @@ const K='servicepro-pilot-v1';
 function emptyDatabase(){return{employees:[],customers:[],products:[],vendors:[],jobs:[],demoBatches:[]}}
 let db=load(),view='dashboard',selectedJob=null,filter='',jobStatusFilter='',processDetail='',navigationHistory=[];
 function load(){try{let raw=localStorage.getItem(K);return raw?{...emptyDatabase(),...JSON.parse(raw)}:emptyDatabase()}catch{return emptyDatabase()}}
-function save(){localStorage.setItem(K,JSON.stringify(db))}
+let serverRevision=0,serverReady=false,localDirty=false,savingToServer=false,saveTimer=null,pollTimer=null;
+function setSyncStatus(text,state=''){let el=$('#syncStatus');if(!el)return;el.textContent=text;el.dataset.state=state}
+function save(){localStorage.setItem(K,JSON.stringify(db));localDirty=true;setSyncStatus('มีข้อมูลรอบันทึก','pending');clearTimeout(saveTimer);saveTimer=setTimeout(flushServerSave,250)}
+function hasData(value){return['employees','customers','products','vendors','jobs'].some(key=>value?.[key]?.length)}
+function normalizeDatabase(value){return{...emptyDatabase(),...(value||{})}}
+function newerJob(a,b){return String(a?.updatedAt||'').localeCompare(String(b?.updatedAt||''))>=0?a:b}
+function mergeCollection(remote=[],local=[],resolver=(_,localItem)=>localItem){let merged=new Map(remote.map(item=>[item.id,item]));local.forEach(item=>merged.set(item.id,merged.has(item.id)?resolver(merged.get(item.id),item):item));return[...merged.values()]}
+function mergeDatabases(remote,local){return{
+  employees:mergeCollection(remote.employees,local.employees),
+  customers:mergeCollection(remote.customers,local.customers),
+  products:mergeCollection(remote.products,local.products),
+  vendors:mergeCollection(remote.vendors,local.vendors),
+  jobs:mergeCollection(remote.jobs,local.jobs,newerJob).sort((a,b)=>String(b.updatedAt||'').localeCompare(String(a.updatedAt||''))),
+  demoBatches:[...new Set([...(remote.demoBatches||[]),...(local.demoBatches||[])])]
+}}
+async function requestState(){let response=await fetch('/api/state',{cache:'no-store'});if(!response.ok)throw Error(`Server ${response.status}`);return response.json()}
+async function flushServerSave(){if(!serverReady||savingToServer||!localDirty)return;savingToServer=true;setSyncStatus('กำลังบันทึก…','syncing');let snapshot=JSON.parse(JSON.stringify(db));try{let response=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({baseRevision:serverRevision,data:snapshot})});if(response.status===409){let remote=await response.json();serverRevision=remote.revision;db=mergeDatabases(normalizeDatabase(remote.data),snapshot);localStorage.setItem(K,JSON.stringify(db));response=await fetch('/api/state',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({baseRevision:serverRevision,data:db})})}if(!response.ok)throw Error(`Server ${response.status}`);let result=await response.json();serverRevision=result.revision;localDirty=false;setSyncStatus('ซิงก์แล้ว','online')}catch(error){console.error(error);setSyncStatus('ออฟไลน์ · เก็บในเครื่องชั่วคราว','offline');setTimeout(flushServerSave,3000)}finally{savingToServer=false;if(localDirty)clearTimeout(saveTimer),saveTimer=setTimeout(flushServerSave,300)}}
+async function pollServer(){if(!serverReady||localDirty||savingToServer)return;try{let remote=await requestState();if(remote.revision>serverRevision&&remote.data){serverRevision=remote.revision;db=normalizeDatabase(remote.data);localStorage.setItem(K,JSON.stringify(db));refreshActorSelect();render();setSyncStatus('อัปเดตจาก Server แล้ว','online');toast('ข้อมูลอัปเดตจากผู้ใช้งานอื่นแล้ว')}else setSyncStatus('ซิงก์แล้ว','online')}catch(error){setSyncStatus('เชื่อมต่อ Server ไม่ได้','offline')}}
+async function connectServer(){setSyncStatus('กำลังเชื่อมต่อ Server…','syncing');try{let remote=await requestState();serverRevision=remote.revision;serverReady=true;if(remote.data){db=normalizeDatabase(remote.data);localStorage.setItem(K,JSON.stringify(db));localDirty=false;refreshActorSelect();render();setSyncStatus('ซิงก์แล้ว','online')}else{localDirty=true;await flushServerSave()}clearInterval(pollTimer);pollTimer=setInterval(pollServer,3000)}catch(error){console.error(error);setSyncStatus('ออฟไลน์ · ใช้ข้อมูลในเครื่อง','offline')}}
 const $=(s)=>document.querySelector(s), esc=(s='')=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const now=()=>new Date().toISOString(), fmt=d=>new Intl.DateTimeFormat('th-TH',{dateStyle:'medium',timeStyle:'short'}).format(new Date(d));
 const actor=()=>db.employees.find(x=>x.id==$('#actorSelect')?.value)||null;
@@ -12,7 +30,7 @@ function toast(t){let e=$('#toast');e.textContent=t;e.classList.add('show');setT
 function id(p){return p+'-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
 function log(job,item,action,note='',actorOverride=null){let a=actorOverride||actor();job.logs.unshift({id:id('l'),itemId:item?.id,action,note,actor:a?`${a.name} · ${a.team}`:'ระบบจำลอง',at:now(),status:item?.status||'',processKey:item?processKeyForStatus(item.status):''});job.updatedAt=now();save()}
 function refreshActorSelect(){let s=$('#actorSelect'),remembered=localStorage.getItem('sp-actor');s.innerHTML=db.employees.length?db.employees.map(e=>`<option value="${e.id}">${e.name} · ${e.team}</option>`).join(''):'<option value="">ยังไม่มีผู้ปฏิบัติงาน</option>';s.disabled=!db.employees.length;s.value=db.employees.some(e=>e.id===remembered)?remembered:(db.employees[0]?.id||'');s.onchange=()=>localStorage.setItem('sp-actor',s.value)}
-function init(){refreshActorSelect();document.body.removeEventListener('click',click);document.body.addEventListener('click',click);window.onstorage=e=>{if(e.key!==K||!e.newValue)return;try{db={...emptyDatabase(),...JSON.parse(e.newValue)};refreshActorSelect();render();toast('ข้อมูลอัปเดตจากหน้าจออื่นแล้ว')}catch{}};$('#exportBtn').onclick=exportData;$('#importInput').onchange=importData;render()}
+function init(){refreshActorSelect();document.body.removeEventListener('click',click);document.body.addEventListener('click',click);window.onstorage=e=>{if(e.key!==K||!e.newValue)return;try{db={...emptyDatabase(),...JSON.parse(e.newValue)};refreshActorSelect();render();toast('ข้อมูลอัปเดตจากหน้าจออื่นแล้ว')}catch{}};$('#exportBtn').onclick=exportData;$('#importInput').onchange=importData;render();connectServer()}
 function currentScreen(){return{view,selectedJob,filter,jobStatusFilter,processDetail}}
 function restoreScreen(s){({view,selectedJob,filter,jobStatusFilter,processDetail}=s);render()}
 function rememberScreen(){let last=navigationHistory.at(-1),next=currentScreen();if(!last||JSON.stringify(last)!==JSON.stringify(next))navigationHistory.push(next)}

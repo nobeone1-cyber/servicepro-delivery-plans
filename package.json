@@ -1,0 +1,13 @@
+{
+  "name": "servicepro-delivery-plans",
+  "version": "0.2.0",
+  "private": true,
+  "description": "ServicePro repair tracking pilot with a shared SQLite database",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check app.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
